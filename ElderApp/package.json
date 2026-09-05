@@ -1,0 +1,18 @@
+{
+  "name": "carecircle",
+  "version": "1.0.0",
+  "description": "Elder care coordination for MuslimHacks 2026 — a demo that helps families and caregivers coordinate safer, more dignified care for elderly Muslims while respecting privacy, independence, and personal preferences.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jsdom": "^30.0.1",
+    "vite": "^5.4.0"
+  }
+}
