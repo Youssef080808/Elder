@@ -1,23 +1,43 @@
-// The single source of truth for app state. Every other module imports
-// `state` from here and mutates it directly (same pattern as the original
-// app.js), so views always read the latest data with no plumbing required.
-import { freshState, loadState, saveState } from './data.js';
+// The client's state is now a cache of the last server response plus which
+// screen is open. Views read `state.data`; they never compute visibility,
+// because by the time a payload reaches them the server has already decided.
+import { loadUi, saveUi } from './data.js';
 
-export let state = loadState() || freshState();
+export let state = {
+  // identity, from GET /api/session
+  person: null,
+  elder: null,
+  circle: [],
+  role: null,
+  isProxy: false,
+  // which screen is open (the only genuinely client-side state)
+  screen: loadUi()?.screen || null,
+  // the payload for the current screen, keyed by screen name
+  data: {},
+  loading: false,
+  error: null,
+};
 
-// Restores demo defaults. Keeps the current role/screen by default so a
-// mid-demo reset doesn't also kick the user back to the login screen.
-export function resetState(keepRoleScreen = true) {
-  const role = state.role;
-  const screen = state.screen;
-  state = freshState();
-  if (keepRoleScreen) {
-    state.role = role;
-    state.screen = screen;
-  }
-  persist();
+export function setSession(session) {
+  state.person = session.person;
+  state.elder = session.elder;
+  state.circle = session.circle || [];
+  state.role = session.person ? (session.person.role === 'elder' ? 'elder' : 'caregiver') : null;
+  state.isProxy = Boolean(session.person && session.person.is_proxy);
+}
+
+export function clearSession() {
+  state.person = null;
+  state.role = null;
+  state.isProxy = false;
+  state.screen = null;
+  state.data = {};
+}
+
+export function setData(key, payload) {
+  state.data[key] = payload;
 }
 
 export function persist() {
-  saveState(state);
+  saveUi(state);
 }
