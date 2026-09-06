@@ -19,6 +19,7 @@ export function render() {
     if (state.screen === 'overview') content = elderOverview();
     else if (state.screen === 'permissions') content = permissions();
     else if (state.screen === 'workload') content = workload();
+    else if (state.screen === 'coverage') content = coverage();
     else if (state.screen === 'preferences') content = preferencesScreen();
     else if (state.screen === 'activity') content = activity();
     else content = elderOverview();
